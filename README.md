@@ -6,6 +6,9 @@ Salon], implemented in C. A Forth-like language is executed once for
 each pixel in an output image. The image is output on the standard
 output in plain PPM format.
 
+`make examples` will generate a few GIF animations in the examples
+directory.
+
 Features
 --------
 
@@ -18,7 +21,7 @@ Requirements
 ------------
 
 -   C compiler (I've used GCC but any C99 compiler should work
--   bash, xargs, ImageMagick (`convert`)
+-   bash, xargs, dc, ImageMagick (`convert`) for `sfgif`
 
 Missing features, compared to Forth Haiku Salon
 -----------------------------------------------
