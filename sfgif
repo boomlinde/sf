@@ -1,0 +1,25 @@
+#!/bin/bash
+
+program="$1"
+frames="${2:-50}"
+colors="${3:-256}"
+outname="$(echo "$program" |sed s/.fs$//g).gif"
+
+if [ -z "$program" ]; then
+	echo "Usage: $1 PROGRAM [FRAMES [COLORS]]" >&2
+	exit 1
+fi
+
+echo "Generating frames..."
+seq -f %05g 1 $frames \
+	|xargs -n1 -t -P$(nproc) -I '{}' sh -c \
+	'./sf ": t $(dc -e "2k{} 1-50/p") ;" "'"$program"'" > frame_{}.ppm'
+
+echo "Building animation \"$outname\"..."
+convert -delay 2 -loop 0 \
+	$(ls frame_*.ppm |sort) -dither FloydSteinberg \
+	-colors "$colors" \
+	"$outname"
+
+rm frame_*.ppm
+echo "Done!"
