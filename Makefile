@@ -49,7 +49,8 @@ examples: \
 	examples/beeplasma.gif \
 	examples/checker.gif \
 	examples/rainbow.gif \
-	examples/metadonut.gif
+	examples/metadonut.gif \
+	examples/mandelbrot.png \
 
 examples/spinner.gif: sf sfgif examples/spinner.fs
 	./sfgif examples/spinner.fs 50 2
@@ -69,6 +70,9 @@ examples/rainbow.gif: sf sfgif examples/rainbow.fs
 examples/metadonut.gif: sf sfgif examples/metadonut.fs
 	./sfgif examples/metadonut.fs 400 32
 
+examples/mandelbrot.png: sf sfgif examples/mandelbrot.fs
+	./sf examples/mandelbrot.fs |convert - examples/mandelbrot.png
+
 clean:
-	-rm -f *.o examples/*.gif sf
+	-rm -f *.o examples/*.gif examples/*.png sf
 
