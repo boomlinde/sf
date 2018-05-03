@@ -8,7 +8,7 @@ char *readfile(char *filename)
 	FILE *f;
 	int res;
 	char *content;
-	long length;
+	size_t length;
 	size_t readsize;
 
 	content = 0;

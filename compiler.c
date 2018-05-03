@@ -18,7 +18,7 @@ enum mode {
 	MODE_NORMAL,
 	MODE_NAME,
 	MODE_MACRO,
-	MODE_COMMENT,
+	MODE_COMMENT
 };
 
 int compiler_compile(
@@ -27,7 +27,7 @@ int compiler_compile(
 		char *program,
 		int doend)
 {
-	int i;
+	size_t i;
 	char *token;
 	enum mode mode;
 	struct instruction ins;
@@ -104,7 +104,7 @@ int compiler_compile(
 			continue;
 		} 
 
-		val = strtof(token, &endptr);
+		val = strtod(token, &endptr);
 		if (*endptr != '\0' || endptr == token) {
 			fprintf(stderr, "Word \"%s\" not found\n", token);
 			return -1;

@@ -4,7 +4,6 @@
 struct tokenizer {
 	char wordbuf[256];
 	char *bufp;
-	int line;
 };
 
 void tokenizer_init(struct tokenizer *tokenizer);

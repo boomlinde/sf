@@ -6,14 +6,12 @@ void tokenizer_init(struct tokenizer *tokenizer)
 {
 	tokenizer->wordbuf[0] = 0;
 	tokenizer->bufp = tokenizer->wordbuf;
-	tokenizer->line = 1;
 }
 
 char *tokenizer_get(struct tokenizer *tokenizer, char c)
 {
 	switch (c) {
 	case '\n':
-		tokenizer->line++;
 	case '\r':
 	case ' ':
 	case '\t':

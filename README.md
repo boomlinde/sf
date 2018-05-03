@@ -80,12 +80,9 @@ TODO
 -   Stack over/underflow should be a runtime error
 -   Compilation, runtime error output with line numbers
 -   Implement `\` line comments
--   Implement `@` and `!` as in ForthSalon (did not exist last time I
-    used it)
+-   Implement `@` and `!` as in ForthSalon
 -   (Maybe) implement `IF ... ELSE ... THEN`, though I like keeping it
     branchless
--   (Maybe) implement `random`, though I like that programs are now pure
-    functions
--   (Maybe) C89 compliance (I want to build this in Turbo C eventually)
+-   (Maybe) implement `random`
 
   [Forth Haiku Salon]: https://forthsalon.appspot.com/

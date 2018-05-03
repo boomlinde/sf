@@ -32,24 +32,3 @@ void instruction_execute(
 		break;
 	}
 }
-
-void instruction_print(struct instruction ins)
-{
-	switch (ins.type) {
-	case INS_NONE:
-		fprintf(stderr, "NONE\n");
-		break;
-	case INS_END:
-		fprintf(stderr, "END\n");
-		break;
-	case INS_PUSH:
-		fprintf(stderr, "PUSH %f\n", ins.data.value);
-		break;
-	case INS_CALL:
-		fprintf(stderr, "CALL %08x\n", ins.data.function);
-		break;
-	case INS_PRGM:
-		fprintf(stderr, "PRGM %d\n", ins.data.program);
-		break;
-	}
-}

@@ -8,6 +8,10 @@
 #include "instruction.h"
 #include "std.h"
 
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
+
 #define REGISTER(_name, _fun) do { \
 	ins.data.function = _fun; \
 	wordlink_add(words, _name, ins); \
@@ -236,7 +240,7 @@ static void insmod(struct machine *m)
 	DTYPE a, b;
 	b = POP();
 	a = POP();
-	PUSH(fmodf(fmodf(a, b) + b, b));
+	PUSH(fmod(fmod(a, b) + b, b));
 }
 
 static void inspow(struct machine *m)
@@ -244,7 +248,7 @@ static void inspow(struct machine *m)
 	DTYPE a, b;
 	b = POP();
 	a = POP();
-	PUSH(powf(a, b));
+	PUSH(pow(a, b));
 }
 
 static void insatan2(struct machine *m)
@@ -252,7 +256,7 @@ static void insatan2(struct machine *m)
 	DTYPE a, b;
 	b = POP();
 	a = POP();
-	PUSH(atan2f(a, b));
+	PUSH(atan2(a, b));
 }
 
 static void negate(struct machine *m)
@@ -262,47 +266,47 @@ static void negate(struct machine *m)
 
 static void inssin(struct machine *m)
 {
-	PUSH(sinf(POP()));
+	PUSH(sin(POP()));
 }
 
 static void instan(struct machine *m)
 {
-	PUSH(tanf(POP()));
+	PUSH(tan(POP()));
 }
 
 static void inscos(struct machine *m)
 {
-	PUSH(cosf(POP()));
+	PUSH(cos(POP()));
 }
 
 static void inslog(struct machine *m)
 {
-	PUSH(logf(POP()));
+	PUSH(log(POP()));
 }
 
 static void insexp(struct machine *m)
 {
-	PUSH(expf(POP()));
+	PUSH(exp(POP()));
 }
 
 static void inssqrt(struct machine *m)
 {
-	PUSH(sqrtf(POP()));
+	PUSH(sqrt(POP()));
 }
 
 static void insfloor(struct machine *m)
 {
-	PUSH(floorf(POP()));
+	PUSH(floor(POP()));
 }
 
 static void insceil(struct machine *m)
 {
-	PUSH(ceilf(POP()));
+	PUSH(ceil(POP()));
 }
 
 static void insabs(struct machine *m)
 {
-	PUSH(fabsf(POP()));
+	PUSH(fabs(POP()));
 }
 
 static void inspi(struct machine *m)
@@ -374,7 +378,7 @@ void std_init(struct wordlink **words)
 	REGISTER("dup", dup);
 	REGISTER("rot", rot);
 	REGISTER("drop", drop);
-	REGISTER("over", rot);
+	REGISTER("over", over);
 	REGISTER("2dup", twodup);
 	REGISTER("-rot", minusrot);
 

@@ -10,7 +10,7 @@ void wordlink_add(
 
 void wordlink_free(struct wordlink **head);
 
-const struct instruction
+struct instruction
 wordlink_find(struct wordlink *head, const char *name);
 
 #endif /* _WORDLINK_H_ */

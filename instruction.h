@@ -8,6 +8,4 @@ void instruction_execute(
 		struct instruction ins,
 		struct machine *machine);
 
-void instruction_print(struct instruction ins);
-
 #endif /* _INSTRUCTION_H_ */

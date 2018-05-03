@@ -1,5 +1,5 @@
 LDFLAGS += -lm -s
-CFLAGS += -Ofast
+CFLAGS += -O3 -std=c89 -Wpedantic -Wall -Wextra -Werror
 
 sf: \
 	sf.o \
