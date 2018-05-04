@@ -53,7 +53,7 @@ int compiler_compile(
 		}
 
 		if (comment) {
-			if (token[strlen(token) - 1] == ')') {
+			if (strcmp(token, ")") == 0) {
 				comment = 0;
 			}
 			continue;
