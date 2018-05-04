@@ -9,7 +9,7 @@
 #include "std.h"
 
 #ifndef M_PI
-#define M_PI 3.14159265358979323846
+#define M_PI 3.14159265358979323846f
 #endif
 
 #define REGISTER(_name, _fun) do { \
@@ -49,7 +49,7 @@ static void div(struct machine *m)
 	DTYPE a, b;
 	b = POP();
 	a = POP();
-	PUSH(a / b);
+	PUSH(b == 0 ? 0.0f : a / b);
 }
 
 static void swap(struct machine *m)
@@ -87,14 +87,14 @@ static void drop(struct machine *m)
 
 static void print(struct machine *m)
 {
-	printf("%f\n", POP());
+	fprintf(stderr, "%f\n", POP());
 }
 
 static void printstack(struct machine *m)
 {
 	int i;
 	for (i = 0; i < m->dstack.index; i++) {
-		printf("%f ", m->dstack.elems[i]);
+		fprintf(stderr, "%f ", m->dstack.elems[i]);
 	}
 	printf("\n");
 }
@@ -203,7 +203,7 @@ static void booland(struct machine *m)
 	DTYPE a, b;
 	b = POP();
 	a = POP();
-	PUSH(TF(a == 1.0 && b == 1.0));
+	PUSH(TF(a == 1.0f && b == 1.0f));
 }
 
 static void boolor(struct machine *m)
@@ -211,12 +211,12 @@ static void boolor(struct machine *m)
 	DTYPE a, b;
 	b = POP();
 	a = POP();
-	PUSH(TF(a == 1.0 || b == 1.0));
+	PUSH(TF(a == 1.0f || b == 1.0f));
 }
 
 static void boolnot(struct machine *m)
 {
-	PUSH(TF(POP() == 0.0));
+	PUSH(TF(POP() == 0.0f));
 }
 
 static void insmin(struct machine *m)
@@ -240,7 +240,7 @@ static void insmod(struct machine *m)
 	DTYPE a, b;
 	b = POP();
 	a = POP();
-	PUSH(fmod(fmod(a, b) + b, b));
+	PUSH(b == 0.0f ? b : fmod(fmod(a, b) + b, b));
 }
 
 static void inspow(struct machine *m)
@@ -362,7 +362,7 @@ static void setheight(struct machine *m)
 
 static void defaultt(struct machine *m)
 {
-	PUSH(0.0);
+	PUSH(0.0f);
 }
 
 void std_init(struct wordlink **words)
