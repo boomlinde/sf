@@ -7,12 +7,9 @@
 #include "wordlink.h"
 #include "codebuf.h"
 
-#define INLINE_MACROS
-
 #define COMPILE() codebuf_append(mode == MODE_MACRO \
 		? &machine->macros \
 		: &machine->program, ins)
-
 
 enum mode {
 	MODE_NORMAL,
@@ -88,7 +85,6 @@ int compiler_compile(
 
 		/* If found... */
 		if (ins.type != INS_NONE) {
-#ifdef INLINE_MACROS
 			/* If macro, Copy instructions instead */
 			if (ins.type == INS_PRGM) {
 				address = ins.data.program;
@@ -99,7 +95,6 @@ int compiler_compile(
 				}
 				continue;
 			}
-#endif
 			COMPILE();
 			continue;
 		} 

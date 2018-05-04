@@ -94,14 +94,34 @@ int main(int argc, char **argv)
 	res = compiler_compile(&m, &words, program, 1);
 	if (res) goto out;
 
+	free(program);
+	program = NULL;
+
 	wordlink_free(&words);
 
-	/* Get width and height from dry run */
+	/* Dry run to get width and height and check for stack under/overflows */
 	m.mem[STD_WIDTH_LOC] = DEFAULT_WIDTH;
 	m.mem[STD_HEIGHT_LOC] = DEFAULT_HEIGHT;
 	insp = m.program.start;
 	while (insp->type != INS_END) {
 		instruction_execute(*insp++, &m);
+		if (m.dstack.index < 0) {
+			fprintf(stderr, "Data stack underflow\n");
+			res = -1;
+			goto out;
+		} else if (m.rstack.index < 0) {
+			fprintf(stderr, "Return stack underflow\n");
+			res = -1;
+			goto out;
+		} else if (m.dstack.index > STACKSIZE) {
+			fprintf(stderr, "Data stack overflow\n");
+			res = -1;
+			goto out;
+		} else if (m.rstack.index > STACKSIZE) {
+			fprintf(stderr, "Return stack overflow\n");
+			res = -1;
+			goto out;
+		}
 	}
 	width = m.mem[STD_WIDTH_LOC];
 	height = m.mem[STD_HEIGHT_LOC];
@@ -128,8 +148,8 @@ int main(int argc, char **argv)
 
 
 out:
+	free(program);
 	wordlink_free(&words);
 	machine_free(&m);
-	free(program);
 	return res;
 }

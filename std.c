@@ -336,31 +336,31 @@ static void zmul(struct machine *m)
 	PUSH(a * d + b * c);
 }
 
-void insx(struct machine *m)
+static void insx(struct machine *m)
 {
 	PUSH(m->mem[STD_X_LOC]);
 }
 
-void insy(struct machine *m)
+static void insy(struct machine *m)
 {
 	PUSH(m->mem[STD_Y_LOC]);
 }
 
-void setwidth(struct machine *m)
+static void setwidth(struct machine *m)
 {
 	DTYPE a;
 	a = POP();
 	m->mem[STD_WIDTH_LOC] = a;
 }
 
-void setheight(struct machine *m)
+static void setheight(struct machine *m)
 {
 	DTYPE a;
 	a = POP();
 	m->mem[STD_HEIGHT_LOC] = a;
 }
 
-void defaultt(struct machine *m)
+static void defaultt(struct machine *m)
 {
 	PUSH(0.0);
 }

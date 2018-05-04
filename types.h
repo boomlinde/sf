@@ -2,7 +2,9 @@
 #define _TYPES_H_
 
 #define DTYPE float
-#define STACKSIZE 256
+
+/* Needs to be power of two */
+#define STACKSIZE (1 << 8)
 
 struct stack;
 struct machine;
@@ -12,7 +14,7 @@ struct wordlink;
 
 struct stack {
 	DTYPE elems[STACKSIZE];
-	unsigned char index;
+	int index;
 };
 
 struct codebuf {

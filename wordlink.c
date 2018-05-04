@@ -26,6 +26,7 @@ void wordlink_free(struct wordlink **head)
 	while (*head) {
 		tmp = (*head)->prev;
 		free(*head);
+		*head = NULL;
 		*head = tmp;
 	}
 }

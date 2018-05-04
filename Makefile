@@ -1,5 +1,5 @@
 LDFLAGS += -lm -s
-CFLAGS += -O3 -std=c89 -Wpedantic -Wall -Wextra -Werror
+CFLAGS += -O3 -std=c89 -Wpedantic -Wall -Wextra
 
 sf: \
 	sf.o \
@@ -70,7 +70,7 @@ examples/rainbow.gif: sf sfgif examples/rainbow.fs
 examples/metadonut.gif: sf sfgif examples/metadonut.fs
 	./sfgif examples/metadonut.fs 400 32
 
-examples/mandelbrot.png: sf sfgif examples/mandelbrot.fs
+examples/mandelbrot.png: sf examples/mandelbrot.fs
 	./sf examples/mandelbrot.fs |convert - examples/mandelbrot.png
 
 clean:

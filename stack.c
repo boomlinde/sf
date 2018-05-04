@@ -4,10 +4,10 @@
 
 void stack_push(struct stack *stack, DTYPE val)
 {
-	stack->elems[stack->index++] = val;
+	stack->elems[stack->index++ & (STACKSIZE - 1)] = val;
 }
 
 DTYPE stack_pop(struct stack *stack)
 {
-	return stack->elems[--stack->index];
+	return stack->elems[--stack->index & (STACKSIZE - 1)];
 }

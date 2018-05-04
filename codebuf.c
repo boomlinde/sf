@@ -44,4 +44,5 @@ void codebuf_execute(struct codebuf *buf, struct machine *machine)
 void codebuf_free(struct codebuf *buf)
 {
 	free(buf->start);
+	buf->start = NULL;
 }
