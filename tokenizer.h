@@ -1,8 +1,10 @@
 #ifndef _TOKENIZER_H_
 #define _TOKENIZER_H_
 
+#include "types.h"
+
 struct tokenizer {
-	char wordbuf[256];
+	char wordbuf[MAXNAME];
 	char *bufp;
 };
 

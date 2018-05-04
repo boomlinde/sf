@@ -23,7 +23,7 @@ char *readfile(char *filename)
 
 	content = malloc(length * sizeof(char) + 1);
 	if (!content) goto out;
-	content[length] = 0;
+	content[length] = '\0';
 
 	res = fseek(f, 0, SEEK_SET);
 	if (res) goto freecontent;

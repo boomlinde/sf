@@ -36,6 +36,9 @@ Missing features, compared to Forth Haiku Salon
 -   `@`, `!`: this implementation provides no memory access (yet)
 -   `if`, `else`, `then`: this implementation is (for now) completely
     branchless
+-   No alpha channel
+-   Word names and numbers are limited to 31 characters each. Names and
+    numbers longer than this may be used, but will be truncated
 
 Additional features
 -------------------
@@ -56,7 +59,7 @@ A brief description of the modules:
     executed
 -   machine: contains two codebufs, two stacks and a small scratch
     memory. One data stack and one "return stack" (which isn't actually
-    a return stack in FOrth Haiku Salon and can be used across word
+    a return stack in Forth Haiku Salon and can be used across word
     boundaries); one main codebuf and one macro codebuf that holds
     compiled words
 -   readfile: function to read a file by filename, allocating space for
@@ -76,8 +79,6 @@ A brief description of the modules:
 TODO
 ----
 
--   Fix potential buffer overflows (token buffer, wordlink name)
--   Stack over/underflow should be a runtime error
 -   Compilation, runtime error output with line numbers
 -   Implement `\` line comments
 -   Implement `@` and `!` as in ForthSalon

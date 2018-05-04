@@ -3,6 +3,8 @@
 
 #define DTYPE float
 
+#define MAXNAME 32
+
 /* Needs to be power of two */
 #define STACKSIZE (1 << 8)
 
@@ -51,7 +53,7 @@ struct instruction {
 };
 
 struct wordlink {
-	char name[40];
+	char name[MAXNAME];
 	struct instruction ins;
 	struct wordlink *prev;
 };

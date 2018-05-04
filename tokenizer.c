@@ -4,7 +4,8 @@
 
 void tokenizer_init(struct tokenizer *tokenizer)
 {
-	tokenizer->wordbuf[0] = 0;
+	tokenizer->wordbuf[0] = '\0';
+	tokenizer->wordbuf[MAXNAME-1] = '\0';
 	tokenizer->bufp = tokenizer->wordbuf;
 }
 
@@ -20,8 +21,10 @@ char *tokenizer_get(struct tokenizer *tokenizer, char c)
 		tokenizer->bufp = tokenizer->wordbuf;
 		return *tokenizer->bufp ? tokenizer->wordbuf : 0;
 	default:
-		*tokenizer->bufp = c;
-		tokenizer->bufp++;
-		return 0;
+		if (tokenizer->wordbuf - tokenizer->bufp < MAXNAME - 1) {
+			*tokenizer->bufp = c;
+			tokenizer->bufp++;
+		}
+		return NULL;
 	}
 }
