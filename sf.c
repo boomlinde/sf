@@ -78,7 +78,7 @@ int main(int argc, char **argv)
 	machine_init(&m);
 
 	program = readfile(argv[argc == 2 ? 1 : 2]);
-	if (program == 0) {
+	if (program == NULL) {
 		fprintf(stderr, "Can't read file \"%s\"\n", argv[argc == 2 ? 1 : 2]);
 		res = -1;
 		goto out;

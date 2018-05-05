@@ -17,9 +17,9 @@ char *tokenizer_get(struct tokenizer *tokenizer, char c)
 	case ' ':
 	case '\t':
 	case 0:
-		*tokenizer->bufp = 0;
+		*tokenizer->bufp = '\0';
 		tokenizer->bufp = tokenizer->wordbuf;
-		return *tokenizer->bufp ? tokenizer->wordbuf : 0;
+		return *tokenizer->wordbuf ? tokenizer->wordbuf : NULL;
 	default:
 		if (tokenizer->wordbuf - tokenizer->bufp < MAXNAME - 1) {
 			*tokenizer->bufp = c;

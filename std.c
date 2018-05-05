@@ -49,7 +49,7 @@ static void div(struct machine *m)
 	DTYPE a, b;
 	b = POP();
 	a = POP();
-	PUSH(b == 0 ? 0.0f : a / b);
+	PUSH(b == 0.0f ? 0.0f : a / b);
 }
 
 static void swap(struct machine *m)

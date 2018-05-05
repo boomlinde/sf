@@ -11,10 +11,10 @@ char *readfile(char *filename)
 	size_t length;
 	size_t readsize;
 
-	content = 0;
+	content = NULL;
 
 	f = fopen(filename, "r");
-	if (f == 0) return content;
+	if (f == NULL) return content;
 
 	res = fseek(f, 0, SEEK_END);
 	if (res) goto out;
