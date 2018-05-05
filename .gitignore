@@ -2,3 +2,4 @@
 *.png
 *.o
 /sf
+/fuzzed.fs

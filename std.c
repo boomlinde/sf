@@ -20,6 +20,9 @@
 #define POP() stack_pop(&m->dstack)
 #define PUSH(_val) stack_push(&m->dstack, (_val))
 
+static int width_run = 0;
+static int height_run = 0;
+
 static void add(struct machine *m)
 {
 	DTYPE a, b;
@@ -350,14 +353,20 @@ static void setwidth(struct machine *m)
 {
 	DTYPE a;
 	a = POP();
-	m->mem[STD_WIDTH_LOC] = a;
+	if (!width_run) {
+		m->mem[STD_WIDTH_LOC] = a;
+		width_run = 1;
+	}
 }
 
 static void setheight(struct machine *m)
 {
 	DTYPE a;
 	a = POP();
-	m->mem[STD_HEIGHT_LOC] = a;
+	if (!height_run) {
+		m->mem[STD_HEIGHT_LOC] = a;
+		height_run = 1;
+	}
 }
 
 static void defaultt(struct machine *m)

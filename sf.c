@@ -16,6 +16,8 @@
 #define DEFAULT_WIDTH 256
 #define DEFAULT_HEIGHT 256
 
+#define EXIT(_err) do { res = (_err); goto out; } while (0)
+
 struct colorf {
 	DTYPE r;
 	DTYPE g;
@@ -72,7 +74,7 @@ int main(int argc, char **argv)
 
 	if (argc != 2 && argc != 3) {
 		fprintf(stderr, "usage: %s [INIT] FILENAME\n", argv[0]);
-		return -1;
+		EXIT(1);
 	}
 
 	machine_init(&m);
@@ -80,19 +82,19 @@ int main(int argc, char **argv)
 	program = readfile(argv[argc == 2 ? 1 : 2]);
 	if (program == NULL) {
 		fprintf(stderr, "Can't read file \"%s\"\n", argv[argc == 2 ? 1 : 2]);
-		res = -1;
-		goto out;
+		EXIT(1);
 	}
 
 	std_init(&words);
 
 	if (argc == 3) {
 		res = compiler_compile(&m, &words, argv[1], 0);
-		if (res) goto out;
+		/* Compiler reports its own errors to stderr */
+		if (res) EXIT(1);
 	}
 
 	res = compiler_compile(&m, &words, program, 1);
-	if (res) goto out;
+	if (res) EXIT(1);
 
 	free(program);
 	program = NULL;
@@ -107,24 +109,21 @@ int main(int argc, char **argv)
 		instruction_execute(*insp++, &m);
 		if (m.dstack.index < 0) {
 			fprintf(stderr, "Data stack underflow\n");
-			res = -1;
-			goto out;
+			EXIT(1);
 		} else if (m.rstack.index < 0) {
 			fprintf(stderr, "Return stack underflow\n");
-			res = -1;
-			goto out;
+			EXIT(1);
 		} else if (m.dstack.index > STACKSIZE) {
 			fprintf(stderr, "Data stack overflow\n");
-			res = -1;
-			goto out;
+			EXIT(1);
 		} else if (m.rstack.index > STACKSIZE) {
 			fprintf(stderr, "Return stack overflow\n");
-			res = -1;
-			goto out;
+			EXIT(1);
 		}
 	}
 	width = m.mem[STD_WIDTH_LOC];
 	height = m.mem[STD_HEIGHT_LOC];
+
 	m.dstack.index = 0;
 	m.rstack.index = 0;
 
@@ -145,7 +144,6 @@ int main(int argc, char **argv)
 			printf("%d %d %d\n", c.r, c.g, c.b);
 		}
 	}
-
 
 out:
 	free(program);
