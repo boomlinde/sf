@@ -3,3 +3,4 @@
 *.o
 /sf
 /fuzzed.fs
+/tags

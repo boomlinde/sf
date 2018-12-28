@@ -47,7 +47,9 @@ int compiler_compile(
 		if (mode == MODE_NAME) {
 			ins.type = INS_PRGM;
 			ins.data.program = machine->macros.head - machine->macros.start;
-			wordlink_add(words, token, ins);
+			if (!wordlink_add(words, token, ins)) {
+				fprintf(stderr, "Unable to create word link for \"%s\"\n", token);
+			}
 			mode = MODE_MACRO;
 			continue;
 		}
@@ -65,15 +67,30 @@ int compiler_compile(
 		}
 
 		if (strcmp(token, ":") == 0) {
-			if (mode == MODE_NAME || mode == MODE_MACRO) return -1;
+			if (mode == MODE_NAME) {
+				fputs("Can not create a macro named \":\"\n", stderr);
+				return 0;
+			}
+			
+			if (mode == MODE_MACRO) {
+				fputs("Can not define a macro within a macro\n", stderr);
+				return 0;
+			}
+
 			mode = MODE_NAME;
 			continue;
 		}
 
 		if (strcmp(token, ";") == 0) {
-			if (mode != MODE_MACRO) return -1;
+			if (mode != MODE_MACRO) {
+				fputs("\";\" may only be used to terminate a macro\n", stderr);
+				return 0;
+			}
 			ins.type = INS_END;
-			codebuf_append(&machine->macros, ins);
+			if (!codebuf_append(&machine->macros, ins)) {
+				fputs("Unable to grow macro buffer\n", stderr);
+				return 0;
+			}
 			mode = MODE_NORMAL;
 			continue;
 		}
@@ -102,7 +119,7 @@ int compiler_compile(
 		val = strtod(token, &endptr);
 		if (*endptr != '\0' || endptr == token) {
 			fprintf(stderr, "Word \"%s\" not found\n", token);
-			return -1;
+			return 0;
 		}
 
 		ins.type = INS_PUSH;
@@ -110,12 +127,15 @@ int compiler_compile(
 		COMPILE();
 	}
 
-	if (mode != MODE_NORMAL) return -1;
+	if (mode != MODE_NORMAL) return 0;
 
 	if (doend) {
 		ins.type = INS_END;
-		codebuf_append(&machine->program, ins);
+		if (!codebuf_append(&machine->program, ins)) {
+			fputs("Unable to grow program buffer", stderr);
+			return 0;
+		}
 	}
 
-	return 0;
+	return 1;
 }

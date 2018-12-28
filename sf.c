@@ -77,7 +77,10 @@ int main(int argc, char **argv)
 		EXIT(1);
 	}
 
-	machine_init(&m);
+	if (!machine_init(&m)) {
+		fputs("Can't initialize VM\n", stderr);
+		EXIT(1);
+	}
 
 	program = readfile(argv[argc == 2 ? 1 : 2]);
 	if (program == NULL) {
@@ -85,16 +88,19 @@ int main(int argc, char **argv)
 		EXIT(1);
 	}
 
-	std_init(&words);
+	if(!std_init(&words)) {
+		fputs("Can't initialize standard library\n", stderr);
+		EXIT(1);
+	}
 
 	if (argc == 3) {
 		res = compiler_compile(&m, &words, argv[1], 0);
 		/* Compiler reports its own errors to stderr */
-		if (res) EXIT(1);
+		if (!res) EXIT(1);
 	}
 
 	res = compiler_compile(&m, &words, program, 1);
-	if (res) EXIT(1);
+	if (!res) EXIT(1);
 
 	free(program);
 	program = NULL;
@@ -108,16 +114,16 @@ int main(int argc, char **argv)
 	while (insp->type != INS_END) {
 		instruction_execute(*insp++, &m);
 		if (m.dstack.index < 0) {
-			fprintf(stderr, "Data stack underflow\n");
+			fputs("Data stack underflow\n", stderr);
 			EXIT(1);
 		} else if (m.rstack.index < 0) {
-			fprintf(stderr, "Return stack underflow\n");
+			fputs("Return stack underflow\n", stderr);
 			EXIT(1);
 		} else if (m.dstack.index > STACKSIZE) {
-			fprintf(stderr, "Data stack overflow\n");
+			fputs("Data stack overflow\n", stderr);
 			EXIT(1);
 		} else if (m.rstack.index > STACKSIZE) {
-			fprintf(stderr, "Return stack overflow\n");
+			fputs("Return stack overflow\n", stderr);
 			EXIT(1);
 		}
 	}

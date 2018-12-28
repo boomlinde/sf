@@ -1,8 +1,9 @@
 #ifndef _TYPES_H_
 #define _TYPES_H_
 
-#define DTYPE float
+#include <stddef.h>
 
+#define DTYPE float
 #define MAXNAME 32
 
 /* Needs to be power of two */
@@ -22,7 +23,7 @@ struct stack {
 struct codebuf {
 	struct instruction *start;
 	struct instruction *head;
-	unsigned int size;
+	size_t size;
 };
 
 struct machine {

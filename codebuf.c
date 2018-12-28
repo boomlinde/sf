@@ -5,7 +5,7 @@
 #include "machine.h"
 #include "codebuf.h"
 
-static void grow(struct codebuf *buf)
+static int grow(struct codebuf *buf)
 {
 	unsigned int offset;
 
@@ -13,24 +13,28 @@ static void grow(struct codebuf *buf)
 	offset = buf->head - buf->start;
 	buf->start = realloc(buf->start, buf->size * sizeof(struct instruction));
 	buf->head = buf->start + offset;
+
+	return buf->start != NULL;
 }
 
-struct codebuf codebuf_new(unsigned int initial_size)
+int codebuf_new(struct codebuf *buf, size_t initial_size)
 {
-	struct codebuf buf;
+	buf->start = malloc(initial_size * sizeof(struct instruction));
+	buf->head = buf->start;
+	buf->size = initial_size;
 
-	buf.start = malloc(initial_size * sizeof(struct instruction));
-	buf.head = buf.start;
-	buf.size = initial_size;
-
-	return buf;
+	return buf->start != NULL;
 }
 
-void codebuf_append(struct codebuf *buf, struct instruction ins)
+int codebuf_append(struct codebuf *buf, struct instruction ins)
 {
-	if (buf->head == buf->start + buf->size) grow(buf);
+	if (buf->head == buf->start + buf->size) {
+		if (!grow(buf)) return 0;
+	}
 	*buf->head = ins;
 	buf->head++;
+
+	return 1;
 }
 
 void codebuf_execute(struct codebuf *buf, struct machine *machine)

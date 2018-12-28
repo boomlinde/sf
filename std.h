@@ -8,6 +8,6 @@
 
 #include "wordlink.h"
 
-void std_init(struct wordlink **words);
+int std_init(struct wordlink **words);
 
 #endif /* _STD_H_ */

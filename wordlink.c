@@ -4,7 +4,7 @@
 #include "wordlink.h"
 #include "types.h"
 
-void wordlink_add(
+int wordlink_add(
 		struct wordlink **head,
 		const char *name,
 		const struct instruction ins)
@@ -12,11 +12,14 @@ void wordlink_add(
 	struct wordlink *new;
 
 	new = malloc(sizeof(struct wordlink));
+	if (!new) return 0;
 
 	new->ins = ins;
 	strcpy(new->name, name);
 	new->prev = *head;
 	*head = new;
+
+	return 1;
 }
 
 void wordlink_free(struct wordlink **head)

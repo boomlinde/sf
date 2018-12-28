@@ -3,7 +3,7 @@
 
 #include "instruction.h"
 
-void wordlink_add(
+int wordlink_add(
 		struct wordlink **head,
 		const char *name,
 		const struct instruction ins);

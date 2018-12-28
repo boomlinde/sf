@@ -14,7 +14,7 @@
 
 #define REGISTER(_name, _fun) do { \
 	ins.data.function = _fun; \
-	wordlink_add(words, _name, ins); \
+	if(!wordlink_add(words, _name, ins)) return 0; \
 } while (0)
 
 #define POP() stack_pop(&m->dstack)
@@ -374,7 +374,7 @@ static void defaultt(struct machine *m)
 	PUSH(0.0f);
 }
 
-void std_init(struct wordlink **words)
+int std_init(struct wordlink **words)
 {
 	struct instruction ins;
 
@@ -442,4 +442,6 @@ void std_init(struct wordlink **words)
 	REGISTER("width", setwidth);
 	REGISTER("height", setheight);
 	REGISTER("t", defaultt);
+
+	return 1;
 }

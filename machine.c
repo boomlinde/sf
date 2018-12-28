@@ -3,22 +3,23 @@
 #include "machine.h"
 #include "codebuf.h"
 
-void machine_init(struct machine *m)
+#define INITIAL_SIZE 2048
+
+int machine_init(struct machine *m)
 {
 	m->dstack.index = 0;
 	m->rstack.index = 0;
-	m->macros = codebuf_new(128);
-	m->program = codebuf_new(128);
+	if(!codebuf_new(&m->macros, INITIAL_SIZE)) return 0;
+	if(!codebuf_new(&m->program, INITIAL_SIZE)) {
+		codebuf_free(&m->macros);
+		return 0;
+	}
+
+	return 1;
 }
 
 void machine_free(struct machine *m)
 {
 	codebuf_free(&m->macros);
 	codebuf_free(&m->program);
-}
-
-void machine_reset(struct machine *m)
-{
-	machine_free(m);
-	machine_init(m);
 }
