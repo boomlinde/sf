@@ -63,13 +63,13 @@ static void outputcolor(struct stack *stack, unsigned char **out)
 int main(int argc, char **argv)
 {
 	struct machine m;
-	int res;
 	size_t x, y, width, height, written;
 	unsigned char *bufp;
 	struct instruction *insp;
 	unsigned char *framebuf = NULL;
 	struct wordlink *words = NULL;
 	char *program = NULL;
+	int res = 0;
 
 	if (argc != 2 && argc != 3) {
 		fprintf(stderr, "usage: %s [INIT] FILENAME\n", argv[0]);
@@ -134,12 +134,12 @@ int main(int argc, char **argv)
 	height = (size_t)m.mem[STD_HEIGHT_LOC];
 	if (width > MAX_DIM || height > MAX_DIM) {
 		fprintf(stderr, "Output dimensions exceed maximum (%d)\n", MAX_DIM);
-		goto out;
+		EXIT(1);
 	}
 
 	if (!(framebuf = malloc(width * height * 3))) {
 		fputs("Can't allocate frame buffer\n", stderr);
-		goto out;
+		EXIT(1);
 	}
 	bufp = framebuf;
 
@@ -167,7 +167,7 @@ int main(int argc, char **argv)
 	if (written != width * height) {
 		fprintf(stderr, "%lu\n", written);
 		fputs("Unable to write complete image to stdout\n", stderr);
-		goto out;
+		EXIT(1);
 	}
 
 out:
