@@ -1,5 +1,5 @@
-LDFLAGS += -lm -s
-CFLAGS += -O3 -std=c89 -Wpedantic -Wall -Wextra
+LDFLAGS += -lm -s -flto
+CFLAGS += -O3 -std=c89 -Wpedantic -Wall -Wextra -flto
 
 sf: \
 	sf.o \
