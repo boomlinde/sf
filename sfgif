@@ -1,5 +1,8 @@
 #!/bin/bash
 
+set -e
+set -o pipefail
+
 program="$1"
 frames="${2:-50}"
 colors="${3:-256}"
@@ -10,16 +13,18 @@ if [ -z "$program" ]; then
 	exit 1
 fi
 
+tmpdir="$(mktemp -d --suffix .sfgif)"
+trap "{ rm -f \"$tmpdir\"/frame_*.ppm && rmdir \"$tmpdir\"; }" EXIT
+
 echo "Generating frames..."
 seq -f %05g 1 $frames \
 	|xargs -n1 -t -P$(nproc) -I '{}' sh -c \
-	'./sf ": t $(dc -e "2k{} 1-50/p") ;" "'"$program"'" > frame_{}.ppm'
+	'./sf ": t $(dc -e "2k{} 1-50/p") ;" "'"$program"'" > "'"$tmpdir"'/frame_{}.ppm"'
 
 echo "Building animation \"$outname\"..."
 convert -delay 2 -loop 0 \
-	$(ls frame_*.ppm |sort) -dither FloydSteinberg \
+	$(find "$tmpdir" -mindepth 1 -maxdepth 1 |sort) -dither FloydSteinberg \
 	-colors "$colors" \
 	"$outname"
 
-rm frame_*.ppm
 echo "Done!"
