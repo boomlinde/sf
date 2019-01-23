@@ -18,46 +18,26 @@
 #define MAX_DIM 8192
 
 #define EXIT(_err) do { res = (_err); goto out; } while (0)
-
-struct colorf {
-	DTYPE r;
-	DTYPE g;
-	DTYPE b;
-};
-
-struct color {
-	unsigned char r;
-	unsigned char g;
-	unsigned char b;
-};
+#define CLAMP(_v) ((_v) > 1.0 ? 1.0 : (_v) < 0.0 ? 0.0 : (_v))
 
 static void outputcolor(struct stack *stack, unsigned char **out)
 {
-	struct colorf c;
+	DTYPE r, g, b;
+	r = g = b = 0.0;
 	switch (stack->index) {
-	case 0:
-		c.r = 0; c.g = 0; c.b = 0;
-		break;
-	case 1:
-		c.r = stack_pop(stack); c.g = 0; c.b = 0;
-		break;
-	case 2:
-		c.g = stack_pop(stack); c.r = stack_pop(stack); c.b = 0;
-		break;
+	case 0: break;
+	case 1: r = stack_pop(stack); break;
+	case 2: g = stack_pop(stack); r = stack_pop(stack); break;
 	default:
-		c.b = stack_pop(stack);
-		c.g = stack_pop(stack);
-		c.r = stack_pop(stack);
+		b = stack_pop(stack);
+		g = stack_pop(stack);
+		r = stack_pop(stack);
 		break;
 	}
 
-	c.r = c.r > 1.0 ? 1.0 : c.r < 0.0 ? 0.0 : c.r;
-	c.g = c.g > 1.0 ? 1.0 : c.g < 0.0 ? 0.0 : c.g;
-	c.b = c.b > 1.0 ? 1.0 : c.b < 0.0 ? 0.0 : c.b;
-
-	*(*out)++ = (unsigned char)(c.r * 255);
-	*(*out)++ = (unsigned char)(c.g * 255);
-	*(*out)++ = (unsigned char)(c.b * 255);
+	*(*out)++ = (unsigned char)(CLAMP(r) * 255);
+	*(*out)++ = (unsigned char)(CLAMP(g) * 255);
+	*(*out)++ = (unsigned char)(CLAMP(b) * 255);
 }
 
 int main(int argc, char **argv)
