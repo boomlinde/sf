@@ -66,6 +66,7 @@ int main(int argc, char **argv)
 	size_t x, y, width, height, written;
 	unsigned char *bufp;
 	struct instruction *insp;
+	int ok;
 	unsigned char *framebuf = NULL;
 	struct wordlink *words = NULL;
 	char *program = NULL;
@@ -93,13 +94,13 @@ int main(int argc, char **argv)
 	}
 
 	if (argc == 3) {
-		res = compiler_compile(&m, &words, argv[1], 0);
+		ok = compiler_compile(&m, &words, argv[1], 0);
 		/* Compiler reports its own errors to stderr */
-		if (!res) EXIT(1);
+		if (!ok) EXIT(1);
 	}
 
-	res = compiler_compile(&m, &words, program, 1);
-	if (!res) EXIT(1);
+	ok = compiler_compile(&m, &words, program, 1);
+	if (!ok) EXIT(1);
 
 	free(program);
 	program = NULL;
