@@ -15,6 +15,7 @@
 
 #define DEFAULT_WIDTH 256
 #define DEFAULT_HEIGHT 256
+#define MAX_DIM 8192
 
 #define EXIT(_err) do { res = (_err); goto out; } while (0)
 
@@ -30,10 +31,9 @@ struct color {
 	unsigned char b;
 };
 
-static struct color getcolor(struct stack *stack)
+static void outputcolor(struct stack *stack, unsigned char **out)
 {
 	struct colorf c;
-	struct color out;
 	switch (stack->index) {
 	case 0:
 		c.r = 0; c.g = 0; c.b = 0;
@@ -55,22 +55,21 @@ static struct color getcolor(struct stack *stack)
 	c.g = c.g > 1.0 ? 1.0 : c.g < 0.0 ? 0.0 : c.g;
 	c.b = c.b > 1.0 ? 1.0 : c.b < 0.0 ? 0.0 : c.b;
 
-	out.r = (int)(c.r * 255);
-	out.g = (int)(c.g * 255);
-	out.b = (int)(c.b * 255);
-	return out;
+	*(*out)++ = (unsigned char)(c.r * 255);
+	*(*out)++ = (unsigned char)(c.g * 255);
+	*(*out)++ = (unsigned char)(c.b * 255);
 }
 
 int main(int argc, char **argv)
 {
-	static struct machine m;
-	static struct wordlink *words;
-	static struct instruction *insp;
-	static char *program;
-	static int res;
-	struct color c;
-	static int x, y;
-	int width, height;
+	struct machine m;
+	int res;
+	size_t x, y, width, height, written;
+	unsigned char *bufp;
+	struct instruction *insp;
+	unsigned char *framebuf = NULL;
+	struct wordlink *words = NULL;
+	char *program = NULL;
 
 	if (argc != 2 && argc != 3) {
 		fprintf(stderr, "usage: %s [INIT] FILENAME\n", argv[0]);
@@ -127,13 +126,26 @@ int main(int argc, char **argv)
 			EXIT(1);
 		}
 	}
-	width = m.mem[STD_WIDTH_LOC];
-	height = m.mem[STD_HEIGHT_LOC];
+
+	if (m.mem[STD_WIDTH_LOC] < 0.0 || m.mem[STD_HEIGHT_LOC] < 0.0) {
+		fputs("Output dimensions may not be negative\n", stderr);
+	}
+	width = (size_t)m.mem[STD_WIDTH_LOC];
+	height = (size_t)m.mem[STD_HEIGHT_LOC];
+	if (width > MAX_DIM || height > MAX_DIM) {
+		fprintf(stderr, "Output dimensions exceed maximum (%d)\n", MAX_DIM);
+		goto out;
+	}
+
+	if (!(framebuf = malloc(width * height * 3))) {
+		fputs("Can't allocate frame buffer\n", stderr);
+		goto out;
+	}
+	bufp = framebuf;
 
 	m.dstack.index = 0;
 	m.rstack.index = 0;
 
-	printf("P3\n%d %d\n255\n", width, height);
 	for (y = 0; y < height; y++) {
 		for (x = 0; x < width; x++) {
 			m.mem[0] = x / (DTYPE)width;
@@ -146,12 +158,20 @@ int main(int argc, char **argv)
 				instruction_execute(*insp++, &m);
 			}
 
-			c = getcolor(&m.dstack);
-			printf("%d %d %d\n", c.r, c.g, c.b);
+			outputcolor(&m.dstack, &bufp);
 		}
 	}
 
+	printf("P6\n%lu %lu\n255\n", width, height);
+	written = fwrite(framebuf, 3, width * height, stdout);
+	if (written != width * height) {
+		fprintf(stderr, "%lu\n", written);
+		fputs("Unable to write complete image to stdout\n", stderr);
+		goto out;
+	}
+
 out:
+	free(framebuf);
 	free(program);
 	wordlink_free(&words);
 	machine_free(&m);
