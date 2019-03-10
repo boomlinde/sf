@@ -52,6 +52,8 @@ int main(int argc, char **argv)
 	char *program = NULL;
 	int res = 0;
 
+	memset(&m, 0, sizeof (m));
+
 	if (argc != 2 && argc != 3) {
 		fprintf(stderr, "usage: %s [INIT] FILENAME\n", argv[0]);
 		EXIT(1);
