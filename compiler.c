@@ -54,34 +54,26 @@ int compiler_compile(
 			continue;
 		}
 
-		if (comment) {
-			if (strcmp(token, ")") == 0) {
-				comment = 0;
-			}
-			continue;
-		}
-
-		if (strcmp(token, "(") == 0) {
+		if (strlen(token) == 1) switch (token[0]) {
+		case '(':
 			comment = 1;
 			continue;
-		}
-
-		if (strcmp(token, ":") == 0) {
-			if (mode == MODE_NAME) {
+		case ')':
+			if (comment) comment = 0;
+			continue;
+		case ':':
+			switch (mode) {
+			case MODE_NAME:
 				fputs("Can not create a macro named \":\"\n", stderr);
 				return 0;
-			}
-			
-			if (mode == MODE_MACRO) {
+			case MODE_MACRO:
 				fputs("Can not define a macro within a macro\n", stderr);
 				return 0;
+			default:
+				mode = MODE_NAME;
 			}
-
-			mode = MODE_NAME;
 			continue;
-		}
-
-		if (strcmp(token, ";") == 0) {
+		case ';':
 			if (mode != MODE_MACRO) {
 				fputs("\";\" may only be used to terminate a macro\n", stderr);
 				return 0;
