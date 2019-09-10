@@ -51,6 +51,7 @@ examples: \
 	examples/rainbow.gif \
 	examples/metadonut.gif \
 	examples/mandelbrot.png \
+	examples/torus.gif
 
 examples/spinner.gif: sf sfgif examples/spinner.fs
 	./sfgif examples/spinner.fs 50 2
@@ -72,6 +73,9 @@ examples/metadonut.gif: sf sfgif examples/metadonut.fs
 
 examples/mandelbrot.png: sf examples/mandelbrot.fs
 	./sf examples/mandelbrot.fs |convert - examples/mandelbrot.png
+
+examples/torus.gif: sf sfgif examples/torus.fs
+	./sfgif examples/torus.fs 100 16
 
 clean:
 	-rm -f *.o examples/*.gif examples/*.png sf
