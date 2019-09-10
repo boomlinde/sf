@@ -75,7 +75,7 @@ examples/mandelbrot.png: sf examples/mandelbrot.fs
 	./sf examples/mandelbrot.fs |convert - examples/mandelbrot.png
 
 examples/torus.gif: sf sfgif examples/torus.fs
-	./sfgif examples/torus.fs 100 16
+	./sfgif examples/torus.fs 50 16
 
 clean:
 	-rm -f *.o examples/*.gif examples/*.png sf
